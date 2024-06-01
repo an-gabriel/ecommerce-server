@@ -1,18 +1,20 @@
 {
-    "type": "postgres",
-    "host": "localhost",
-    "port": 5432,
-    "username": "postgres",
-    "password": "postgres",
-    "database": "dev-database",
-    "entities": [
-        "dist/**/*.entity{.ts,.js}"
-    ],
-    "migrations": [
-        "dist/migrations/*{.ts,.js}"
-    ],
-    "cli": {
-        "migrationsDir": "src/migrations"
-    },
-    "synchronize": false
+	"type": "postgres",
+	"host": "localhost",
+	"port": 5432,
+	"username": "postgres",
+	"password": "postgres",
+	"database": "dev-database",
+	"synchronize": true,
+	"logging": false,
+	"entities": [
+		"src/modules/**/entity/**/*.ts"
+	],
+	"migrations": [
+		"src/database/migrations/*.ts"
+	],
+	"cli": {
+		"entitiesDir": "src/modules/**/entity",
+		"migrationsDir": "src/database/migrations"
+	}
 }
