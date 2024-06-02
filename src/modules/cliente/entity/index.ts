@@ -40,7 +40,7 @@ export class Cliente {
 	@ManyToOne(() => Endereco, endereco => endereco.clientes)
 	@JoinColumn({ name: 'endereco_id' })
 	@ApiProperty({ type: () => Endereco, description: 'Endereço do cliente' })
-	endereco: Endereco;
+	endereco?: Endereco;
 
 	@Exclude()
 	@OneToMany(() => Pedido, pedido => pedido.cliente)

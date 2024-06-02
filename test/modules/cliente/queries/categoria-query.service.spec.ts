@@ -35,11 +35,22 @@ describe('ClienteQueryService', () => {
 				senha: 'senha123',
 				nome: 'Cliente Atualizado',
 				cpf: '12345678901',
-				endereco_id: 1,
+				endereco: {
+					endereco_id: 1,
+					cep: '12345-678',
+					rua: 'Rua Exemplo',
+					bairro: 'Bairro Exemplo',
+					cidade: 'Cidade Exemplo',
+					numero: '123',
+					complemento: 'Complemento Exemplo',
+					uf: 'SP',
+				},
+				pedidos: [],
 				username: 'cliente123',
 				telefone: '11999999999',
 				data_nascimento: '1990-01-01'
 			}];
+
 			jest.spyOn(clienteRepository, 'find').mockResolvedValue(clientes);
 
 			const result = await service.findAll();
@@ -56,7 +67,17 @@ describe('ClienteQueryService', () => {
 				senha: 'senha123',
 				nome: 'Cliente Atualizado',
 				cpf: '12345678901',
-				endereco_id: 1,
+				endereco: {
+					endereco_id: 1,
+					cep: '12345-678',
+					rua: 'Rua Exemplo',
+					bairro: 'Bairro Exemplo',
+					cidade: 'Cidade Exemplo',
+					numero: '123',
+					complemento: 'Complemento Exemplo',
+					uf: 'SP',
+				},
+				pedidos: [],
 				username: 'cliente123',
 				telefone: '11999999999',
 				data_nascimento: '1990-01-01'

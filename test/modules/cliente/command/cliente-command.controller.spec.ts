@@ -32,9 +32,19 @@ describe('ClienteCommandController', () => {
 				cliente_id: 1,
 				email: 'cliente@exemplo.com',
 				senha: 'senha123',
-				nome: 'Cliente',
+				nome: 'Cliente Atualizado',
 				cpf: '12345678901',
-				endereco_id: 1,
+				endereco: {
+					endereco_id: 1,
+					cep: '12345-678',
+					rua: 'Rua Exemplo',
+					bairro: 'Bairro Exemplo',
+					cidade: 'Cidade Exemplo',
+					numero: '123',
+					complemento: 'Complemento Exemplo',
+					uf: 'SP',
+				},
+				pedidos: [],
 				username: 'cliente123',
 				telefone: '11999999999',
 				data_nascimento: '1990-01-01'
@@ -45,7 +55,7 @@ describe('ClienteCommandController', () => {
 				senha: createdCliente.senha,
 				nome: createdCliente.nome,
 				cpf: createdCliente.cpf,
-				endereco_id: createdCliente.endereco_id
+				endereco_id: createdCliente.endereco.endereco_id
 			};
 
 			jest.spyOn(service, 'create').mockResolvedValue(createdCliente);
@@ -65,7 +75,17 @@ describe('ClienteCommandController', () => {
 				senha: 'senha123',
 				nome: 'Cliente Atualizado',
 				cpf: '12345678901',
-				endereco_id: 1,
+				endereco: {
+					endereco_id: 1,
+					cep: '12345-678',
+					rua: 'Rua Exemplo',
+					bairro: 'Bairro Exemplo',
+					cidade: 'Cidade Exemplo',
+					numero: '123',
+					complemento: 'Complemento Exemplo',
+					uf: 'SP',
+				},
+				pedidos: [],
 				username: 'cliente123',
 				telefone: '11999999999',
 				data_nascimento: '1990-01-01'
