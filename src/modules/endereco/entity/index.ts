@@ -38,6 +38,6 @@ export class Endereco {
 
 	@OneToMany(() => Cliente, cliente => cliente.endereco)
 	@ApiProperty({ type: () => Cliente, isArray: true, description: 'Lista de clientes do endereço' })
-	clientes: Cliente[];
+	clientes?: Cliente[];
 }
 

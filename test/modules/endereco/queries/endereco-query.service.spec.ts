@@ -38,6 +38,7 @@ describe('EnderecoQueryService', () => {
 				cidade: 'Cidade Exemplo',
 				uf: 'UE',
 				cep: '12345678',
+				clientes: []
 			}];
 			jest.spyOn(repository, 'find').mockResolvedValue(enderecos);
 
@@ -58,6 +59,7 @@ describe('EnderecoQueryService', () => {
 				cidade: 'Cidade Exemplo',
 				uf: 'UE',
 				cep: '12345678',
+				clientes: []
 			};
 			jest.spyOn(repository, 'findOne').mockResolvedValue(endereco);
 
