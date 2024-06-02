@@ -18,7 +18,6 @@ describe('CategoriaCommandService', () => {
 			findOne: jest.fn(),
 			update: jest.fn(),
 			delete: jest.fn(),
-			// Adicione outros métodos do Repository que seu serviço utiliza
 		};
 
 		const module: TestingModule = await Test.createTestingModule({
