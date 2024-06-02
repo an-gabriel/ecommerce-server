@@ -11,11 +11,11 @@ export const dataConnection: DataSourceOptions = {
 	synchronize: true,
 	logging: true,
 	entities: [
-		"./dist/src/modules/**/entity/*.{ts,js}"
+		"src/modules/**/entity/*.{ts,js}"
 	],
 	subscribers: [],
 	migrations: [
-		"./dist/src/database/migrations/*.{ts,js}"
+		"src/database/migrations/*.{ts,js}"
 	]
 }
 

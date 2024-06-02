@@ -8,10 +8,10 @@
 	"synchronize": true,
 	"logging": false,
 	"entities": [
-		"src/modules/**/entity/**/*.ts"
+		"dist/src/modules/**/entity/**/*.{ts,js}"
 	],
 	"migrations": [
-		"src/database/migrations/*.ts"
+		"dist/src/database/migrations/*.{ts,js}"
 	],
 	"cli": {
 		"entitiesDir": "src/modules/**/entity",
