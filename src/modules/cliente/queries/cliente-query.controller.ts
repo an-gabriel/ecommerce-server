@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { ClienteQueryService } from './cliente-query.service';
-import { Cliente } from '../entity'; // Assumindo que você tenha a entidade Cliente
+import { Cliente } from '../entity';
 
 @ApiTags('clientes')
 @Controller('clientes')
