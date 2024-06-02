@@ -34,6 +34,6 @@ export class CreateEnderecoDto {
 
 	@IsString()
 	@IsNotEmpty()
-	@ApiProperty({ example: 'Estado A', description: 'Estado do endereço' })
+	@ApiProperty({ example: 'UF', description: 'Estado do endereço' })
 	uf: string;
 }
