@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CategoriaModule } from './modules/categoria/categoria.module';
+import { ClienteModule } from './modules/cliente/cliente.module';
+import { EnderecoModule } from './modules/endereco/endereco.module';
 
 @Module({
 	imports: [
@@ -16,7 +18,9 @@ import { CategoriaModule } from './modules/categoria/categoria.module';
 			autoLoadEntities: true,
 			synchronize: true,
 		}),
-		CategoriaModule
+		CategoriaModule,
+		ClienteModule,
+		EnderecoModule
 	],
 	controllers: [AppController],
 	providers: [AppService],
