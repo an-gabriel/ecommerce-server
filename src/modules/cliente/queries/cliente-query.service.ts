@@ -12,10 +12,10 @@ export class ClienteQueryService {
 	) { }
 
 	async findAll(): Promise<Cliente[]> {
-		return this.clienteRepository.find();
+		return await this.clienteRepository.find({ relations: { endereco: true } });
 	}
 
 	async findOne(cliente_id: number): Promise<Cliente> {
-		return this.clienteRepository.findOne({ where: { cliente_id } });
+		return this.clienteRepository.findOne({ where: { cliente_id }, relations: { endereco: true } });
 	}
 }

@@ -1,6 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-
+import { Pedido } from '../../pedido/entity';
+import { Endereco } from '../../endereco/entity';
+import { Exclude } from 'class-transformer'
 @Entity('cliente')
 export class Cliente {
 	@PrimaryGeneratedColumn()
@@ -35,7 +37,13 @@ export class Cliente {
 	@ApiProperty({ example: '1990-01-01', description: 'Data de nascimento do cliente', nullable: true })
 	data_nascimento: string;
 
-	@Column()
-	@ApiProperty({ example: 1, description: 'Identificador do endereço do cliente' })
-	endereco_id: number;
+	@ManyToOne(() => Endereco, endereco => endereco.clientes)
+	@JoinColumn({ name: 'endereco_id' })
+	@ApiProperty({ type: () => Endereco, description: 'Endereço do cliente' })
+	endereco: Endereco;
+
+	@Exclude()
+	@OneToMany(() => Pedido, pedido => pedido.cliente)
+	@ApiProperty({ type: () => Pedido, isArray: true, description: 'Lista de pedidos do cliente' })
+	pedidos: Pedido[];
 }
