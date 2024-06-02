@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { CategoriaModule } from './modules/categoria/categoria.module';
 import { ClienteModule } from './modules/cliente/cliente.module';
 import { EnderecoModule } from './modules/endereco/endereco.module';
+import { PedidoModule } from './modules/pedido/pedido.module';
 
 @Module({
 	imports: [
@@ -20,7 +21,8 @@ import { EnderecoModule } from './modules/endereco/endereco.module';
 		}),
 		CategoriaModule,
 		ClienteModule,
-		EnderecoModule
+		EnderecoModule,
+		PedidoModule
 	],
 	controllers: [AppController],
 	providers: [AppService],
