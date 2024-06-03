@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, IsNumber, IsString, MaxLength } from 'class-validator';
+import { IsInt, IsOptional, IsNumber, IsString, MaxLength, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateProdutoDto {
@@ -16,11 +16,13 @@ export class UpdateProdutoDto {
 
 	@IsNumber()
 	@IsOptional()
+	@Min(0, { message: 'O preço do produto não pode ser negativo' })
 	@ApiProperty({ example: 2999.99, description: 'Preço do produto', required: false })
 	preco_produto?: number;
 
 	@IsInt()
 	@IsOptional()
+	@Min(0, { message: 'A quantidade em estoque não pode ser negativa' })
 	@ApiProperty({ example: 10, description: 'Quantidade em estoque', required: false })
 	qtd_estoque?: number;
 

@@ -6,10 +6,11 @@ import { ProdutoQueryService } from './queries/produto-query.service';
 import { ProdutoCommandService } from './command/produto-command.service';
 import { ProdutoQueryController } from './queries/produto-query.controller';
 import { ProdutoCommandController } from './command/produto-command.controller';
+import { Categoria } from '../categoria/entity';
 
 
 @Module({
-	imports: [TypeOrmModule.forFeature([Produto])],
+	imports: [TypeOrmModule.forFeature([Produto, Categoria])],
 	controllers: [ProdutoCommandController, ProdutoQueryController],
 	providers: [ProdutoCommandService, ProdutoQueryService],
 	exports: [ProdutoCommandService],

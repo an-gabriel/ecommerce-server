@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsInt, IsNotEmpty, IsNumber, IsOptional, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreatePedidoDto {
@@ -9,6 +9,7 @@ export class CreatePedidoDto {
 
 	@IsNumber()
 	@IsNotEmpty()
+	@Min(0, { message: 'O valor total do pedido não pode ser negativo' })
 	@ApiProperty({ example: 100.50, description: 'Valor total do pedido' })
 	valor_total_pedido: number;
 
