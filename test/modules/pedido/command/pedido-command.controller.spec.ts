@@ -44,7 +44,8 @@ describe('PedidoCommandController', () => {
 					telefone: '11999999999',
 					data_nascimento: '1990-01-01',
 					pedidos: []
-				}
+				},
+				produtosPedidos: []
 			};
 			const pedidoDto: CreatePedidoDto = {
 				numero_pedido: createdPedido.numero_pedido,
@@ -63,7 +64,15 @@ describe('PedidoCommandController', () => {
 	describe('update', () => {
 		it('should update an existing pedido', async () => {
 			const id = 1;
-			const updatedPedido: Pedido = { pedido_id: 1, numero_pedido: 54321, valor_total_pedido: 299.99, data_pedido: new Date(), status: true };
+			const updatedPedido: Pedido = {
+				pedido_id: 1,
+				numero_pedido: 54321,
+				valor_total_pedido: 299.99,
+				data_pedido: new Date(),
+				status: true,
+				produtosPedidos: []
+			};
+
 			const pedidoDto: UpdatePedidoDto = { numero_pedido: updatedPedido.numero_pedido, valor_total_pedido: updatedPedido.valor_total_pedido };
 
 			jest.spyOn(service, 'update').mockResolvedValue(updatedPedido);

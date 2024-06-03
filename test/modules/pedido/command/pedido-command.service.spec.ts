@@ -32,7 +32,8 @@ describe('PedidoCommandService', () => {
 				numero_pedido: 12345,
 				valor_total_pedido: 199.99,
 				data_pedido: new Date(),
-				status: true
+				status: true,
+				produtosPedidos: []
 			};
 			const pedidoDto: CreatePedidoDto = {
 				numero_pedido: createdPedido.numero_pedido, valor_total_pedido: createdPedido.valor_total_pedido,
@@ -50,7 +51,10 @@ describe('PedidoCommandService', () => {
 	describe('update', () => {
 		it('should update an existing pedido', async () => {
 			const id = 1;
-			const updatedPedido: Pedido = { pedido_id: 1, numero_pedido: 54321, valor_total_pedido: 299.99, data_pedido: new Date(), status: true };
+			const updatedPedido: Pedido = {
+				pedido_id: 1, numero_pedido: 54321, valor_total_pedido: 299.99, data_pedido: new Date(), status: true,
+				produtosPedidos: []
+			};
 			const pedidoDto: UpdatePedidoDto = { numero_pedido: updatedPedido.numero_pedido, valor_total_pedido: updatedPedido.valor_total_pedido };
 
 			jest.spyOn(repository, 'findOne').mockResolvedValue(updatedPedido);
@@ -73,7 +77,10 @@ describe('PedidoCommandService', () => {
 	describe('delete', () => {
 		it('should delete an existing pedido', async () => {
 			const id = 1;
-			const deletedPedido: Pedido = { pedido_id: 1, numero_pedido: 12345, valor_total_pedido: 199.99, data_pedido: new Date(), status: true };
+			const deletedPedido: Pedido = {
+				pedido_id: 1, numero_pedido: 12345, valor_total_pedido: 199.99, data_pedido: new Date(), status: true,
+				produtosPedidos: []
+			};
 
 			jest.spyOn(repository, 'findOne').mockResolvedValue(deletedPedido);
 			jest.spyOn(repository, 'remove').mockResolvedValue(undefined);

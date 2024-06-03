@@ -31,8 +31,24 @@ describe('PedidoQueryService', () => {
 	describe('findAll', () => {
 		it('should return an array of pedidos', async () => {
 			const mockPedidos: Pedido[] = [
-				{ pedido_id: 1, numero_pedido: 12345, valor_total_pedido: 199.99, data_pedido: new Date(), status: true, cliente: null },
-				{ pedido_id: 2, numero_pedido: 54321, valor_total_pedido: 299.99, data_pedido: new Date(), status: false, cliente: null },
+				{
+					pedido_id: 1,
+					numero_pedido: 12345,
+					valor_total_pedido: 199.99,
+					data_pedido: new Date(),
+					status: true,
+					cliente: null,
+					produtosPedidos: []
+				},
+				{
+					pedido_id: 2,
+					numero_pedido: 54321,
+					valor_total_pedido: 299.99,
+					data_pedido: new Date(),
+					status: false,
+					cliente: null,
+					produtosPedidos: []
+				},
 			];
 
 			jest.spyOn(repository, 'find').mockResolvedValue(mockPedidos);
@@ -45,7 +61,15 @@ describe('PedidoQueryService', () => {
 	describe('findOne', () => {
 		it('should return a single pedido', async () => {
 			const pedidoId = 1;
-			const mockPedido: Pedido = { pedido_id: 1, numero_pedido: 12345, valor_total_pedido: 199.99, data_pedido: new Date(), status: true, cliente: null };
+			const mockPedido: Pedido = {
+				pedido_id: 1,
+				numero_pedido: 12345,
+				valor_total_pedido: 199.99,
+				data_pedido: new Date(),
+				status: true,
+				cliente: null,
+				produtosPedidos: []
+			};
 
 			jest.spyOn(repository, 'findOne').mockResolvedValue(mockPedido);
 

@@ -1,6 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Cliente } from '../../cliente/entity';
+import { ProdutoPedido } from '../../produto-pedido/entity';
+
 
 @Entity()
 export class Pedido {
@@ -28,4 +30,8 @@ export class Pedido {
 	@JoinColumn({ name: 'cliente_id' })
 	@ApiProperty({ type: () => Cliente, description: 'Cliente que fez o pedido' })
 	cliente?: Cliente;
+
+	@OneToMany(() => ProdutoPedido, produtoPedido => produtoPedido.pedido)
+	@ApiProperty({ type: () => Cliente, description: 'Produtos do pedido' })
+	produtosPedidos: ProdutoPedido[];
 }

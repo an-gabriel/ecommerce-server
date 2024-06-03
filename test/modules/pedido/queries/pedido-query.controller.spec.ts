@@ -4,7 +4,6 @@ import { PedidoQueryService } from '../../../../src/modules/pedido/queries/pedid
 import { Pedido } from '../../../../src/modules/pedido/entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { NotFoundException } from '@nestjs/common';
 
 describe('PedidoQueryController', () => {
 	let controller: PedidoQueryController;
@@ -33,8 +32,24 @@ describe('PedidoQueryController', () => {
 	describe('findAll', () => {
 		it('should return a list of all pedidos', async () => {
 			const mockPedidos: Pedido[] = [
-				{ pedido_id: 1, numero_pedido: 12345, valor_total_pedido: 199.99, data_pedido: new Date(), status: true, cliente: null },
-				{ pedido_id: 2, numero_pedido: 54321, valor_total_pedido: 299.99, data_pedido: new Date(), status: false, cliente: null },
+				{
+					pedido_id: 1,
+					numero_pedido: 12345,
+					valor_total_pedido: 199.99,
+					data_pedido: new Date(),
+					status: true,
+					cliente: null,
+					produtosPedidos: []
+				},
+				{
+					pedido_id: 2,
+					numero_pedido: 54321,
+					valor_total_pedido: 299.99,
+					data_pedido: new Date(),
+					status: false,
+					cliente: null,
+					produtosPedidos: []
+				},
 			];
 
 			jest.spyOn(service, 'findAll').mockResolvedValue(mockPedidos);
@@ -47,7 +62,15 @@ describe('PedidoQueryController', () => {
 	describe('findOne', () => {
 		it('should return the details of a specific pedido', async () => {
 			const pedidoId = 1;
-			const mockPedido: Pedido = { pedido_id: 1, numero_pedido: 12345, valor_total_pedido: 199.99, data_pedido: new Date(), status: true, cliente: null };
+			const mockPedido: Pedido = {
+				pedido_id: 1,
+				numero_pedido: 12345,
+				valor_total_pedido: 199.99,
+				data_pedido: new Date(),
+				status: true,
+				cliente: null,
+				produtosPedidos: []
+			};
 
 			jest.spyOn(service, 'findOne').mockResolvedValue(mockPedido);
 
