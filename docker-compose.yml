@@ -1,5 +1,9 @@
 version: "3"
 
+networks:
+  dev-network:
+    driver: bridge
+
 services:
   postgres:
     image: postgres:latest
@@ -12,6 +16,21 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - dev-network
+
+  nest-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+    networks:
+      - dev-network
 
 volumes:
   pgdata:

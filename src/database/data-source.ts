@@ -3,7 +3,7 @@ import { DataSource, DataSourceOptions } from "typeorm";
 
 export const dataConnection: DataSourceOptions = {
 	type: "postgres",
-	host: "localhost",
+	host: "server-postgres-1",
 	port: 5432,
 	username: "postgres",
 	password: "postgres",

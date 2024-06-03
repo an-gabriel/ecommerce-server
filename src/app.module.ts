@@ -14,7 +14,7 @@ import { AuthMiddleware } from './middleware/auth.middleware';
 	imports: [
 		TypeOrmModule.forRoot({
 			type: 'postgres',
-			host: 'localhost',
+			host: 'server-postgres-1',
 			port: 5432,
 			username: 'postgres',
 			password: 'postgres',
