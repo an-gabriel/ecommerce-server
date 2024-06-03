@@ -31,7 +31,10 @@ describe('CategoriaQueryController', () => {
 
 	describe('findAll', () => {
 		it('should return all categorias', async () => {
-			const categorias: Categoria[] = [{ categoria_id: 1, nome_categoria: 'Categoria 1', descricao_categoria: 'Categoria 1 descrição' }];
+			const categorias: Categoria[] = [{
+				categoria_id: 1, nome_categoria: 'Categoria 1', descricao_categoria: 'Categoria 1 descrição',
+				produtos: []
+			}];
 			jest.spyOn(service, 'findAll').mockResolvedValue(categorias);
 
 			const result = await controller.findAll();
@@ -42,7 +45,10 @@ describe('CategoriaQueryController', () => {
 	describe('findOne', () => {
 		it('should return a single categoria by ID', async () => {
 			const categoriaId = 1;
-			const categoria: Categoria = { categoria_id: 1, nome_categoria: 'Categoria 1', descricao_categoria: 'Categoria 1 descrição' }
+			const categoria: Categoria = {
+				categoria_id: 1, nome_categoria: 'Categoria 1', descricao_categoria: 'Categoria 1 descrição',
+				produtos: []
+			}
 			jest.spyOn(service, 'findOne').mockResolvedValue(categoria);
 
 			const result = await controller.findOne(categoriaId);

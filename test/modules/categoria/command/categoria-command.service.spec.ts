@@ -49,6 +49,7 @@ describe('CategoriaCommandService', () => {
 			categoria_id: 1,
 			nome_categoria: createCategoriaDto.nome_categoria,
 			descricao_categoria: createCategoriaDto.descricao_categoria || '',
+			produtos: []
 		};
 
 		categoriaRepositoryMock.create.mockReturnValue(categoria);
@@ -66,6 +67,7 @@ describe('CategoriaCommandService', () => {
 			categoria_id: 1,
 			nome_categoria: 'Eletrônicos',
 			descricao_categoria: 'Dispositivos eletrônicos',
+			produtos: []
 		};
 
 		const updatedCategoriaDto: UpdateCategoriaDto = {
@@ -76,7 +78,8 @@ describe('CategoriaCommandService', () => {
 		const updatedCategoria: Categoria = {
 			categoria_id: categoria.categoria_id,
 			nome_categoria: categoria.nome_categoria,
-			descricao_categoria: categoria.descricao_categoria
+			descricao_categoria: categoria.descricao_categoria,
+			produtos: []
 		};
 
 		categoriaRepositoryMock.findOne.mockResolvedValueOnce(categoria);
@@ -97,6 +100,7 @@ describe('CategoriaCommandService', () => {
 			categoria_id: 1,
 			nome_categoria: 'Eletrônicos',
 			descricao_categoria: 'Dispositivos eletrônicos',
+			produtos: []
 		};
 
 		categoriaRepositoryMock.delete.mockResolvedValue({ affected: 1 });

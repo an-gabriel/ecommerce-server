@@ -29,8 +29,14 @@ describe('CategoriaQueryService', () => {
 
 	describe('findAll', () => {
 		it('should return all categorias', async () => {
-			const categorias: Categoria[] = [{ categoria_id: 1, nome_categoria: 'Categoria 1', descricao_categoria: 'Categoria 1 descrição' }];
-			jest.spyOn(repositoryMock, 'find').mockResolvedValue(categorias); // Usar jest.spyOn para mockar o método find
+			const categorias: Categoria[] = [{
+				categoria_id: 1,
+				nome_categoria: 'Categoria 1',
+				descricao_categoria: 'Categoria 1 descrição',
+				produtos: []
+			}];
+			
+			jest.spyOn(repositoryMock, 'find').mockResolvedValue(categorias);
 
 			const result = await service.findAll();
 			expect(result).toEqual(categorias);
@@ -40,8 +46,14 @@ describe('CategoriaQueryService', () => {
 	describe('findOne', () => {
 		it('should return a single categoria by ID', async () => {
 			const categoriaId = 1;
-			const categoria: Categoria = { categoria_id: 1, nome_categoria: 'Categoria 1', descricao_categoria: 'Categoria 1 descrição' };
-			jest.spyOn(repositoryMock, 'findOne').mockResolvedValue(categoria); // Usar jest.spyOn para mockar o método findOne
+			const categoria: Categoria = {
+				categoria_id: 1,
+				nome_categoria: 'Categoria 1',
+				descricao_categoria: 'Categoria 1 descrição',
+				produtos: []
+			};
+
+			jest.spyOn(repositoryMock, 'findOne').mockResolvedValue(categoria);
 
 			const result = await service.findOne(categoriaId);
 			expect(result).toEqual(categoria);

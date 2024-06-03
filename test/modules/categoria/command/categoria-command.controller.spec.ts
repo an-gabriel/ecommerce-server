@@ -25,7 +25,10 @@ describe('CategoriaCommandController', () => {
 
 	describe('create', () => {
 		it('should create a new categoria', async () => {
-			const createdCategoria: Categoria = { categoria_id: 1, nome_categoria: 'Categoria 1', descricao_categoria: 'Categoria descrição 1' };
+			const createdCategoria: Categoria = {
+				categoria_id: 1, nome_categoria: 'Categoria 1', descricao_categoria: 'Categoria descrição 1',
+				produtos: []
+			};
 			const categoriaDto: CreateCategoriaDto = { nome_categoria: createdCategoria.nome_categoria };
 
 			jest.spyOn(service, 'create').mockResolvedValue(createdCategoria);
@@ -39,7 +42,10 @@ describe('CategoriaCommandController', () => {
 		it('should update an existing categoria', async () => {
 			const id = 1;
 
-			const updatedCategoria: Categoria = { categoria_id: 1, nome_categoria: 'Categoria Atualizada', descricao_categoria: 'Categoria Atualizada' };
+			const updatedCategoria: Categoria = {
+				categoria_id: 1, nome_categoria: 'Categoria Atualizada', descricao_categoria: 'Categoria Atualizada',
+				produtos: []
+			};
 			const categoriaDto: UpdateCategoriaDto = { nome_categoria: updatedCategoria.nome_categoria };
 
 			jest.spyOn(service, 'update').mockResolvedValue(updatedCategoria);
