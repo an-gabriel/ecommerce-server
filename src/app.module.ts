@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,6 +8,7 @@ import { EnderecoModule } from './modules/endereco/endereco.module';
 import { PedidoModule } from './modules/pedido/pedido.module';
 import { ProdutoModule } from './modules/produto/produto.module';
 import { PedidoProdutoModule } from './modules/produto-pedido/pedido-produto.module';
+import { AuthMiddleware } from './middleware/auth.middleware';
 
 @Module({
 	imports: [
@@ -31,4 +32,6 @@ import { PedidoProdutoModule } from './modules/produto-pedido/pedido-produto.mod
 	controllers: [AppController],
 	providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {
+
+}

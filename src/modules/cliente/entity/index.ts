@@ -37,6 +37,10 @@ export class Cliente {
 	@ApiProperty({ example: '1990-01-01', description: 'Data de nascimento do cliente', nullable: true })
 	data_nascimento: string;
 
+	@Column({ type: 'number', nullable: false })
+	@ApiProperty({ example: 1, description: 'ID do endereço do cliente', required: false })
+	endereco_id: number;
+
 	@ManyToOne(() => Endereco, endereco => endereco.clientes)
 	@JoinColumn({ name: 'endereco_id' })
 	@ApiProperty({ type: () => Endereco, description: 'Endereço do cliente' })

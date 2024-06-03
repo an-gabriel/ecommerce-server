@@ -4,12 +4,15 @@ import { Repository } from 'typeorm';
 import { Cliente } from '../entity';
 import { CreateClienteDto, UpdateClienteDto } from '../dto';
 import { validateOrReject } from 'class-validator';
+import { Endereco } from '../../endereco/entity';
+import { getRepositoryToken } from '@nestjs/typeorm'; // Importe o getRepositoryToken
 
 @Injectable()
 export class ClienteCommandService {
 	constructor(
 		@InjectRepository(Cliente)
 		private readonly clienteRepository: Repository<Cliente>,
+		@InjectRepository(Endereco) private readonly enderecoRepository: Repository<Endereco>,
 	) { }
 
 	async create(createClienteDto: CreateClienteDto): Promise<Cliente> {
@@ -26,6 +29,14 @@ export class ClienteCommandService {
 		if (clienteComMesmoCpf) {
 			throw new BadRequestException('Este CPF já está cadastrado.');
 		}
+
+		const verificaEndereco = await this.enderecoRepository.findOne({ where: { endereco_id: createClienteDto.endereco_id } });
+
+		if (!verificaEndereco) {
+			throw new BadRequestException('Este endereço não existe');
+		}
+
+		console.log(createClienteDto)
 
 		const cliente = this.clienteRepository.create(createClienteDto);
 		return this.clienteRepository.save(cliente);
@@ -70,3 +81,4 @@ export class ClienteCommandService {
 		await this.clienteRepository.delete(cliente_id);
 	}
 }
+

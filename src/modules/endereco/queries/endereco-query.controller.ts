@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { EnderecoQueryService } from './endereco-query.service';
 import { Endereco } from '../entity';
 
@@ -11,6 +11,7 @@ export class EnderecoQueryController {
 	@Get()
 	@ApiOperation({ summary: 'Retorna uma lista de todos os endereços' })
 	@ApiOkResponse({ description: 'Lista de endereços retornada com sucesso', type: [Endereco] })
+	@ApiBearerAuth('JWT-auth')
 	async findAll() {
 		return this.enderecoQueryService.findAll();
 	}
@@ -18,6 +19,7 @@ export class EnderecoQueryController {
 	@Get(':endereco_id')
 	@ApiOperation({ summary: 'Retorna os detalhes de um endereço específico' })
 	@ApiOkResponse({ description: 'Detalhes do endereço retornados com sucesso', type: Endereco })
+	@ApiBearerAuth('JWT-auth')
 	async findOne(@Param('endereco_id') endereco_id: number) {
 		return this.enderecoQueryService.findOne(endereco_id);
 	}

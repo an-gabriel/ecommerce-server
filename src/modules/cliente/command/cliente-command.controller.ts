@@ -1,5 +1,5 @@
 import { Controller, Post, Put, Delete, Body, Param } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiCreatedResponse, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { ClienteCommandService } from './cliente-command.service';
 import { CreateClienteDto, UpdateClienteDto } from '../dto';
 import { Cliente } from '../entity'; // Assumindo que você tenha a entidade Cliente
@@ -12,6 +12,7 @@ export class ClienteCommandController {
 	@Post()
 	@ApiOperation({ summary: 'Cria um novo cliente' })
 	@ApiCreatedResponse({ description: 'Cliente criado com sucesso', type: Cliente })
+	@ApiBearerAuth('JWT-auth')
 	async create(@Body() createClienteDto: CreateClienteDto) {
 		return this.clienteCommandService.create(createClienteDto);
 	}
@@ -19,6 +20,7 @@ export class ClienteCommandController {
 	@Put(':id')
 	@ApiOperation({ summary: 'Atualiza um cliente existente' })
 	@ApiOkResponse({ description: 'Cliente atualizado com sucesso', type: Cliente })
+	@ApiBearerAuth('JWT-auth')
 	async update(@Param('id') id: number, @Body() updateClienteDto: UpdateClienteDto) {
 		return this.clienteCommandService.update(id, updateClienteDto);
 	}
@@ -26,6 +28,7 @@ export class ClienteCommandController {
 	@Delete(':id')
 	@ApiOperation({ summary: 'Exclui um cliente existente' })
 	@ApiOkResponse({ description: 'Cliente excluído com sucesso' })
+	@ApiBearerAuth('JWT-auth')
 	async delete(@Param('id') id: number) {
 		return this.clienteCommandService.delete(id);
 	}

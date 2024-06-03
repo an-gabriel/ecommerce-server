@@ -2,21 +2,36 @@ import "reflect-metadata";
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AuthMiddleware } from './middleware/auth.middleware';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 
+	// Middleware de autenticação global
+	app.use(new AuthMiddleware().use);
+
 	// Configuração do Swagger
 	const config = new DocumentBuilder()
 		.setTitle('Ecommerce')
-		.setDescription('desenvolvido para o teste de fullstack do GB')
+		.setDescription('Desenvolvido para o teste de fullstack do GB')
 		.setVersion('1.0')
 		.addTag('categorias', 'Operações relacionadas a categorias')
+		.addBearerAuth(
+			{
+				type: 'http',
+				scheme: 'bearer',
+				bearerFormat: 'JWT',
+				name: 'JWT',
+				description: 'Enter JWT token',
+				in: 'header',
+			},
+			'JWT-auth',
+		)
 		.build();
 
 	const document = SwaggerModule.createDocument(app, config);
 
-	// Configuração manual dos controladores
+	// Configuração do Swagger
 	SwaggerModule.setup('api', app, document);
 
 	await app.listen(3000);
