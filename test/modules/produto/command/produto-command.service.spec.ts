@@ -3,25 +3,44 @@ import { ProdutoCommandService } from '../../../../src/modules/produto/command/p
 import { Produto } from '../../../../src/modules/produto/entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CreateProdutoDto, UpdateProdutoDto } from '../../../../src/modules/produto/dto';
+import { Categoria } from '../../../../src/modules/categoria/entity';
 
 describe('ProdutoCommandService', () => {
 	let service: ProdutoCommandService;
 	let produtoRepository: Repository<Produto>;
+	let categoriaRepository: Repository<Categoria>;
+
+	const mockProdutoRepository = {
+		findOne: jest.fn(),
+		create: jest.fn(),
+		save: jest.fn(),
+		remove: jest.fn(),
+		update: jest.fn(),
+		delete: jest.fn(),
+	};
+
+	const mockCategoriaRepository = {
+		findOne: jest.fn(),
+	};
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				ProdutoCommandService,
-				{
-					provide: getRepositoryToken(Produto),
-					useClass: Repository,
-				},
+				{ provide: getRepositoryToken(Produto), useValue: mockProdutoRepository },
+				{ provide: getRepositoryToken(Categoria), useValue: mockCategoriaRepository },
 			],
 		}).compile();
 
 		service = module.get<ProdutoCommandService>(ProdutoCommandService);
 		produtoRepository = module.get<Repository<Produto>>(getRepositoryToken(Produto));
+		categoriaRepository = module.get<Repository<Categoria>>(getRepositoryToken(Categoria));
+	});
+
+	afterEach(() => {
+		jest.clearAllMocks();
 	});
 
 	it('should be defined', () => {
@@ -29,53 +48,68 @@ describe('ProdutoCommandService', () => {
 	});
 
 	describe('create', () => {
-
-		const createDto: CreateProdutoDto = {
-			nome_produto: 'Notebook',
-			descricao_produto: 'Notebook com 16GB de RAM e 512GB SSD',
-			preco_produto: 2999.99,
-			qtd_estoque: 10,
-			categoria_id: 1,
-			imagem: 'https://example.com/imagem.jpg'
-		};
-
 		it('should create a new product', async () => {
-
-			const createdProduct: Produto = {
-				produto_id: 1,
-				nome_produto: createDto.nome_produto,
-				descricao_produto: createDto.descricao_produto || '',
-				preco_produto: createDto.preco_produto || 0,
-				qtd_estoque: createDto.qtd_estoque || 0,
-				data_cadastro_produto: new Date(),
-				categoria: {
-					categoria_id: 0,
-					nome_categoria: '',
-					descricao_categoria: '',
-					produtos: []
-				},
-				imagem: createDto.imagem || '',
-				produtosPedidos: []
+			const createDto: CreateProdutoDto = {
+				nome_produto: 'Notebook',
+				descricao_produto: 'Notebook com 16GB de RAM e 512GB SSD',
+				preco_produto: 2999.99,
+				qtd_estoque: 10,
+				categoria_id: 1,
+				imagem: 'https://example.com/imagem.jpg'
 			};
 
-			jest.spyOn(produtoRepository, 'create').mockReturnValue(createdProduct);
-			jest.spyOn(produtoRepository, 'save').mockResolvedValue(createdProduct);
+			const categoriaMock: Categoria = {
+				categoria_id: 1,
+				nome_categoria: 'Eletrônicos',
+				descricao_categoria: 'Categoria de produtos eletrônicos',
+				produtos: []
+			};
+
+			const produtoMock: Produto = {
+				...createDto,
+				produto_id: 1,
+				categoria: categoriaMock,
+				data_cadastro_produto: new Date(),
+				produtosPedidos: [],
+				descricao_produto: createDto.descricao_produto || '',
+				imagem: createDto.imagem || '',
+			};
+
+			mockCategoriaRepository.findOne.mockResolvedValue(categoriaMock);
+			mockProdutoRepository.create.mockReturnValue(produtoMock);
+			mockProdutoRepository.save.mockResolvedValue(produtoMock);
 
 			const result = await service.create(createDto);
 
-			expect(produtoRepository.create).toHaveBeenCalledWith(createDto);
-			expect(produtoRepository.save).toHaveBeenCalledWith(createdProduct);
+			expect(mockProdutoRepository.create).toHaveBeenCalledWith(createDto);
+			expect(mockProdutoRepository.save).toHaveBeenCalledWith(produtoMock);
+			expect(result).toEqual(produtoMock);
+		});
+
+
+		it('should throw BadRequestException if category does not exist', async () => {
+			const createDto: CreateProdutoDto = {
+				nome_produto: 'Notebook',
+				descricao_produto: 'Notebook com 16GB de RAM e 512GB SSD',
+				preco_produto: 2999.99,
+				qtd_estoque: 10,
+				categoria_id: 1,
+				imagem: 'https://example.com/imagem.jpg'
+			};
+
+			mockCategoriaRepository.findOne.mockResolvedValue(null);
+
+			await expect(service.create(createDto)).rejects.toThrowError(NotFoundException);
 		});
 	});
-
 
 	describe('update', () => {
 		it('should update an existing product', async () => {
 			const updateDto: UpdateProdutoDto = {
-				nome_produto: 'Novo Nome do Produto',
-				descricao_produto: 'Nova descrição do produto',
-				preco_produto: 1999.99,
-				qtd_estoque: 5,
+				nome_produto: 'Notebook Novo Modelo',
+				descricao_produto: 'Notebook com 32GB de RAM e 1TB SSD',
+				preco_produto: 3499.99,
+				qtd_estoque: 15,
 				categoria_id: 2,
 				imagem: 'https://example.com/nova-imagem.jpg'
 			};
@@ -84,51 +118,138 @@ describe('ProdutoCommandService', () => {
 
 			const existingProduct: Produto = {
 				produto_id: productId,
-				nome_produto: 'Produto Existente',
-				descricao_produto: 'Descrição do produto existente',
+				nome_produto: 'Notebook',
+				descricao_produto: 'Notebook com 16GB de RAM e 512GB SSD',
 				preco_produto: 2999.99,
 				qtd_estoque: 10,
-				data_cadastro_produto: new Date(),
 				categoria: {
 					categoria_id: 1,
-					nome_categoria: 'Categoria Existente',
-					descricao_categoria: 'Descrição da categoria existente',
+					nome_categoria: 'Eletrônicos',
+					descricao_categoria: 'Categoria de produtos eletrônicos',
 					produtos: []
 				},
-				imagem: 'https://example.com/imagem-existente.jpg',
+				imagem: 'https://example.com/imagem.jpg',
+				data_cadastro_produto: undefined,
 				produtosPedidos: []
 			};
 
-			// Corrigindo atribuições dos valores do DTO ao objeto existingProduct
-			existingProduct.nome_produto = updateDto.nome_produto || existingProduct.nome_produto;
-			existingProduct.descricao_produto = updateDto.descricao_produto || existingProduct.descricao_produto;
-			existingProduct.preco_produto = updateDto.preco_produto || existingProduct.preco_produto;
-			existingProduct.qtd_estoque = updateDto.qtd_estoque || existingProduct.qtd_estoque;
-			existingProduct.categoria.categoria_id = updateDto.categoria_id || existingProduct.categoria.categoria_id;
-			existingProduct.imagem = updateDto.imagem || existingProduct.imagem;
+			const updatedProduct: Produto = {
+				...existingProduct,
+				...updateDto,
+				categoria: {
+					categoria_id: 2,
+					nome_categoria: 'Computadores',
+					descricao_categoria: 'Categoria de computadores',
+					produtos: []
+				}
+			};
 
-			jest.spyOn(produtoRepository, 'update').mockResolvedValue(undefined);
-			jest.spyOn(produtoRepository, 'findOne').mockResolvedValue(existingProduct);
+			mockProdutoRepository.findOne.mockResolvedValue(existingProduct);
+			mockCategoriaRepository.findOne.mockResolvedValue({
+				categoria_id: 2,
+				nome_categoria: 'Computadores',
+				descricao_categoria: 'Categoria de computadores',
+			});
+			mockProdutoRepository.save.mockResolvedValue(updatedProduct);
 
 			const result = await service.update(productId, updateDto);
 
-			expect(produtoRepository.update).toHaveBeenCalledWith(productId, updateDto);
-			expect(produtoRepository.findOne).toHaveBeenCalledWith({ where: { produto_id: productId } });
-			expect(result).toEqual(existingProduct); // Corrigido para comparar com o produto atualizado
+			expect(mockProdutoRepository.findOne).toHaveBeenCalledWith({ where: { produto_id: productId } });
+			expect(mockCategoriaRepository.findOne).
+				toHaveBeenCalledWith({ where: { categoria_id: updateDto.categoria_id } });
+			expect(result).toEqual(updatedProduct);
+		});
+
+		it('should throw NotFoundException if product does not exist', async () => {
+			const updateDto: UpdateProdutoDto = {
+				nome_produto: 'Notebook Novo Modelo',
+				descricao_produto: 'Notebook com 32GB de RAM e 1TB SSD',
+				preco_produto: 3499.99,
+				qtd_estoque: 15,
+				categoria_id: 2,
+				imagem: 'https://example.com/nova-imagem.jpg'
+			};
+
+			const productId = 1;
+
+			mockProdutoRepository.findOne.mockResolvedValue(null);
+
+			await expect(service.update(productId, updateDto)).rejects.toThrowError(NotFoundException);
+		});
+
+		it('should throw NotFoundException if category does not exist', async () => {
+			const updateDto: UpdateProdutoDto = {
+				nome_produto: 'Notebook Novo Modelo',
+				descricao_produto: 'Notebook com 32GB de RAM e 1TB SSD',
+				preco_produto: 3499.99,
+				qtd_estoque: 15,
+				categoria_id: 2,
+				imagem: 'https://example.com/nova-imagem.jpg'
+			};
+
+			const productId = 1;
+
+			const existingProduct: Produto = {
+				produto_id: productId,
+				nome_produto: 'Notebook',
+				descricao_produto: 'Notebook com 16GB de RAM e 512GB SSD',
+				preco_produto: 2999.99,
+				qtd_estoque: 10,
+				categoria: {
+					categoria_id: 1,
+					nome_categoria: 'Eletrônicos',
+					descricao_categoria: 'Categoria de produtos eletrônicos',
+					produtos: []
+				},
+				imagem: 'https://example.com/imagem.jpg',
+				data_cadastro_produto: undefined,
+				produtosPedidos: []
+			};
+
+			mockProdutoRepository.findOne.mockResolvedValue(existingProduct);
+			mockCategoriaRepository.findOne.mockResolvedValue(null);
+
+			await expect(service.update(productId, updateDto)).rejects.toThrowError(NotFoundException);
 		});
 	});
-
-
-
 
 	describe('delete', () => {
 		it('should delete an existing product', async () => {
 			const productId = 1;
 
-			jest.spyOn(produtoRepository, 'delete').mockResolvedValue(undefined);
+			const existingProduct: Produto = {
+				produto_id: productId,
+				nome_produto: 'Notebook',
+				descricao_produto: 'Notebook com 16GB de RAM e 512GB SSD',
+				preco_produto: 2999.99,
+				qtd_estoque: 10,
+				categoria: {
+					categoria_id: 1,
+					nome_categoria: 'Eletrônicos',
+					descricao_categoria: 'Categoria de produtos eletrônicos',
+					produtos: []
+				},
+				imagem: 'https://example.com/imagem.jpg',
+				data_cadastro_produto: undefined,
+				produtosPedidos: []
+			};
 
-			expect(await service.delete(productId)).toBeUndefined();
-			expect(produtoRepository.delete).toHaveBeenCalledWith(productId);
+			mockProdutoRepository.findOne.mockResolvedValue(existingProduct);
+			mockProdutoRepository.remove.mockResolvedValue(undefined);
+
+
+			await expect(service.delete(productId)).resolves.toBeUndefined();
+
+
+			expect(mockProdutoRepository.remove).toHaveBeenCalledTimes(1);
+		});
+
+		it('should throw NotFoundException if product does not exist', async () => {
+			const productId = 1;
+
+			mockProdutoRepository.findOne.mockResolvedValue(null);
+
+			await expect(service.delete(productId)).rejects.toThrowError(NotFoundException);
 		});
 	});
 });

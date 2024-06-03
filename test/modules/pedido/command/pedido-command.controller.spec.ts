@@ -5,6 +5,7 @@ import { CreatePedidoDto, UpdatePedidoDto } from '../../../../src/modules/pedido
 import { Pedido } from '../../../../src/modules/pedido/entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Cliente } from '../../../../src/modules/cliente/entity';
 
 describe('PedidoCommandController', () => {
 	let controller: PedidoCommandController;
@@ -17,6 +18,10 @@ describe('PedidoCommandController', () => {
 				PedidoCommandService,
 				{
 					provide: getRepositoryToken(Pedido),
+					useClass: Repository,
+				},
+				{
+					provide: getRepositoryToken(Cliente),
 					useClass: Repository,
 				},
 			],
@@ -43,14 +48,15 @@ describe('PedidoCommandController', () => {
 					cpf: '12345678901',
 					telefone: '11999999999',
 					data_nascimento: '1990-01-01',
-					pedidos: []
+					pedidos: [],
+					endereco_id: 0
 				},
 				produtosPedidos: []
 			};
 			const pedidoDto: CreatePedidoDto = {
 				numero_pedido: createdPedido.numero_pedido,
 				valor_total_pedido: createdPedido.valor_total_pedido,
-				cliente_id: createdPedido.cliente.cliente_id // Usando o ID do cliente válido
+				cliente_id: createdPedido.cliente.cliente_id
 			};
 
 			jest.spyOn(service, 'create').mockResolvedValue(createdPedido);

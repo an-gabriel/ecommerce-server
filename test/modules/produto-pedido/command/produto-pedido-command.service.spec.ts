@@ -18,7 +18,16 @@ describe('ProdutoPedidoCommandController', () => {
 			providers: [ProdutoPedidoCommandService, {
 				provide: getRepositoryToken(ProdutoPedido),
 				useClass: Repository,
-			}],
+			},
+			{
+				provide: getRepositoryToken(Produto),
+				useClass: Repository,
+			},
+			{
+				provide: getRepositoryToken(Pedido),
+				useClass: Repository,
+			}
+		],
 		}).compile();
 
 		controller = module.get<ProdutoPedidoCommandController>(ProdutoPedidoCommandController);

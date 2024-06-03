@@ -49,7 +49,8 @@ describe('ClienteQueryController', () => {
 				pedidos: [],
 				username: 'cliente123',
 				telefone: '11999999999',
-				data_nascimento: '1990-01-01'
+				data_nascimento: '1990-01-01',
+				endereco_id: 0
 			}];
 			jest.spyOn(service, 'findAll').mockResolvedValue(clientes);
 
@@ -81,7 +82,8 @@ describe('ClienteQueryController', () => {
 				pedidos: [],
 				username: 'cliente123',
 				telefone: '11999999999',
-				data_nascimento: '1990-01-01'
+				data_nascimento: '1990-01-01',
+				endereco_id: 0
 			};
 			jest.spyOn(service, 'findOne').mockResolvedValue(cliente);
 

@@ -3,6 +3,7 @@ import { ProdutoCommandController } from '../../../../src/modules/produto/comman
 import { ProdutoCommandService } from '../../../../src/modules/produto/command/produto-command.service';
 import { CreateProdutoDto, UpdateProdutoDto } from '../../../../src/modules/produto/dto';
 import { Produto } from '../../../../src/modules/produto/entity';
+import { Categoria } from '../../../../src/modules/categoria/entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -17,7 +18,11 @@ describe('ProdutoCommandController', () => {
 				{
 					provide: getRepositoryToken(Produto),
 					useClass: Repository,
-				}
+				},
+				{
+					provide: getRepositoryToken(Categoria),
+					useClass: Repository,
+				},
 			],
 		}).compile();
 

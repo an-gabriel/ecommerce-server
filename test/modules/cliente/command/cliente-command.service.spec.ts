@@ -3,11 +3,13 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ClienteCommandService } from '../../../../src/modules/cliente/command/cliente-command.service';
 import { Cliente } from '../../../../src/modules/cliente/entity';
+import { Endereco } from '../../../../src/modules/endereco/entity';
 import { CreateClienteDto, UpdateClienteDto } from '../../../../src/modules/cliente/dto';
 
 describe('ClienteCommandService', () => {
 	let service: ClienteCommandService;
 	let clienteRepositoryMock: any;
+	let enderecoRepositoryMock: any;
 
 	beforeEach(async () => {
 		clienteRepositoryMock = {
@@ -18,12 +20,20 @@ describe('ClienteCommandService', () => {
 			delete: jest.fn(),
 		};
 
+		enderecoRepositoryMock = {
+			findOne: jest.fn(),
+		};
+
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				ClienteCommandService,
 				{
 					provide: getRepositoryToken(Cliente),
 					useValue: clienteRepositoryMock,
+				},
+				{
+					provide: getRepositoryToken(Endereco),
+					useValue: enderecoRepositoryMock,
 				},
 			],
 		}).compile();
@@ -44,16 +54,22 @@ describe('ClienteCommandService', () => {
 				cpf: '12345678901',
 				endereco_id: 1,
 			};
-			const cliente = { ...createDto, cliente_id: 1 };
+
+			const enderecoMock = {
+				endereco_id: 1,
+				// outros campos necessários do endereço...
+			};
+
 			clienteRepositoryMock.findOne.mockResolvedValue(null);
-			clienteRepositoryMock.create.mockReturnValue(cliente);
-			clienteRepositoryMock.save.mockResolvedValue(cliente);
+			clienteRepositoryMock.create.mockReturnValue(createDto);
+			enderecoRepositoryMock.findOne.mockResolvedValue(enderecoMock);
+			clienteRepositoryMock.save.mockResolvedValue(createDto);
 
 			const result = await service.create(createDto);
 
-			expect(result).toEqual(cliente);
+			expect(result).toEqual(createDto);
 			expect(clienteRepositoryMock.create).toHaveBeenCalledWith(createDto);
-			expect(clienteRepositoryMock.save).toHaveBeenCalledWith(cliente);
+			expect(clienteRepositoryMock.save).toHaveBeenCalledWith(createDto);
 		});
 
 		it('should throw BadRequestException if email is already registered', async () => {
@@ -64,6 +80,7 @@ describe('ClienteCommandService', () => {
 				cpf: '12345678901',
 				endereco_id: 1,
 			};
+
 			clienteRepositoryMock.findOne.mockResolvedValue({ email: 'cliente@test.com' });
 
 			await expect(service.create(createDto)).rejects.toThrowError(BadRequestException);
@@ -77,8 +94,23 @@ describe('ClienteCommandService', () => {
 				cpf: '12345678901',
 				endereco_id: 1,
 			};
+
 			clienteRepositoryMock.findOne.mockResolvedValue(null);
 			clienteRepositoryMock.findOne.mockResolvedValueOnce({ cpf: '12345678901' });
+
+			await expect(service.create(createDto)).rejects.toThrowError(BadRequestException);
+		});
+
+		it('should throw BadRequestException if endereco does not exist', async () => {
+			const createDto: CreateClienteDto = {
+				email: 'cliente@test.com',
+				senha: 'password',
+				nome: 'Cliente Teste',
+				cpf: '12345678901',
+				endereco_id: 1,
+			};
+
+			enderecoRepositoryMock.findOne.mockResolvedValue(null);
 
 			await expect(service.create(createDto)).rejects.toThrowError(BadRequestException);
 		});
@@ -96,13 +128,12 @@ describe('ClienteCommandService', () => {
 				senha: 'password',
 				nome: 'Cliente Teste',
 				cpf: '12345678901',
-				endereco_id: 1
+				endereco_id: 1,
 			};
 
 			clienteRepositoryMock.findOne.mockResolvedValue(cliente);
 			clienteRepositoryMock.update.mockImplementation(async (cliente_id, data) => {
-				// Simula a atualização do cliente no banco de dados
-				cliente.nome = data.nome; // Atualiza apenas o nome do cliente
+				cliente.nome = data.nome;
 				return { affected: 1 };
 			});
 

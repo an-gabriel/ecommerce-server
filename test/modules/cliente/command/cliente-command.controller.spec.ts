@@ -5,6 +5,7 @@ import { CreateClienteDto, UpdateClienteDto } from '../../../../src/modules/clie
 import { Cliente } from '../../../../src/modules/cliente/entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Endereco } from '../../../../src/modules/endereco/entity';
 
 describe('ClienteCommandController', () => {
 	let controller: ClienteCommandController;
@@ -17,6 +18,10 @@ describe('ClienteCommandController', () => {
 				ClienteCommandService,
 				{
 					provide: getRepositoryToken(Cliente),
+					useClass: Repository,
+				},
+				{
+					provide: getRepositoryToken(Endereco),
 					useClass: Repository,
 				},
 			],
@@ -47,7 +52,8 @@ describe('ClienteCommandController', () => {
 				pedidos: [],
 				username: 'cliente123',
 				telefone: '11999999999',
-				data_nascimento: '1990-01-01'
+				data_nascimento: '1990-01-01',
+				endereco_id: 0
 			};
 
 			const clienteDto: CreateClienteDto = {
@@ -88,7 +94,8 @@ describe('ClienteCommandController', () => {
 				pedidos: [],
 				username: 'cliente123',
 				telefone: '11999999999',
-				data_nascimento: '1990-01-01'
+				data_nascimento: '1990-01-01',
+				endereco_id: 0
 			};
 
 			const clienteDto: UpdateClienteDto = { nome: updatedCliente.nome };

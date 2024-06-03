@@ -5,7 +5,6 @@ import { Cliente } from '../entity';
 import { CreateClienteDto, UpdateClienteDto } from '../dto';
 import { validateOrReject } from 'class-validator';
 import { Endereco } from '../../endereco/entity';
-import { getRepositoryToken } from '@nestjs/typeorm'; // Importe o getRepositoryToken
 
 @Injectable()
 export class ClienteCommandService {
