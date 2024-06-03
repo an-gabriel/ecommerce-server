@@ -6,6 +6,8 @@ import { CategoriaModule } from './modules/categoria/categoria.module';
 import { ClienteModule } from './modules/cliente/cliente.module';
 import { EnderecoModule } from './modules/endereco/endereco.module';
 import { PedidoModule } from './modules/pedido/pedido.module';
+import { ProdutoModule } from './modules/produto/produto.module';
+import { PedidoProdutoModule } from './modules/produto-pedido/pedido-produto.module';
 
 @Module({
 	imports: [
@@ -22,7 +24,9 @@ import { PedidoModule } from './modules/pedido/pedido.module';
 		CategoriaModule,
 		ClienteModule,
 		EnderecoModule,
-		PedidoModule
+		PedidoModule,
+		ProdutoModule,
+		PedidoProdutoModule
 	],
 	controllers: [AppController],
 	providers: [AppService],
