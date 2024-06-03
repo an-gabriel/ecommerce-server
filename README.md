@@ -1,73 +1,138 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Configuração do Ambiente
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Requisitos
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- Docker
+- Docker Compose
+- Node.js
+- Nest.js
 
-## Description
+## Passos para iniciar o servidor Nest.js com PostgreSQL local
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+1. **Clone o repositório**
 
-## Installation
+   ```sh
+   git clone git@github.com:an-gabriel/ecommerce-server.git
+   cd ecommerce-server
+   ```
 
-```bash
-$ npm install
-```
+2. **Configurar o Docker e o PostgreSQL**
 
-## Running the app
+   - Certifique-se de que o Docker e o Docker Compose estão instalados.
+   - Crie um arquivo `docker-compose.yml` na raiz do projeto com o seguinte conteúdo:
 
-```bash
-# development
-$ npm run start
+     ```yaml
+     version: '3'
 
-# watch mode
-$ npm run start:dev
+     services:
+       postgres:
+         image: postgres:latest
+         environment:
+           POSTGRES_USER: postgres
+           POSTGRES_PASSWORD: postgres
+           POSTGRES_DB: dev-database
+         ports:
+           - "5432:5432"
+         volumes:
+           - postgres_data:/var/lib/postgresql/data
 
-# production mode
-$ npm run start:prod
-```
+     volumes:
+       postgres_data:
+     ```
 
-## Test
+   - Inicie os serviços do Docker:
 
-```bash
-# unit tests
-$ npm run test
+     ```sh
+     docker-compose up -d
+     ```
 
-# e2e tests
-$ npm run test:e2e
+3. **Configurar o Nest.js**
 
-# test coverage
-$ npm run test:cov
-```
+   - Certifique-se de que o Nest.js está instalado globalmente ou que você tenha configurado o script de inicialização no `package.json` do seu projeto.
+   - Configure o arquivo `src/app.module.ts` para conectar-se ao banco de dados PostgreSQL no Docker:
 
-## Support
+     ```typescript
+     import { Module } from '@nestjs/common';
+     import { TypeOrmModule } from '@nestjs/typeorm';
+     import { AppController } from './app.controller';
+     import { AppService } from './app.service';
+     import { dataConnection } from './data.connection';
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+     @Module({
+       imports: [
+         TypeOrmModule.forRoot(dataConnection),
+       ],
+       controllers: [AppController],
+       providers: [AppService],
+     })
+     export class AppModule {}
+     ```
 
-## Stay in touch
+4. **Executar as Migrações**
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+   - Após iniciar o PostgreSQL no Docker, execute as migrações do banco de dados usando o TypeORM:
 
-## License
+     ```sh
+     npm run typeorm:run
+     ```
 
-Nest is [MIT licensed](LICENSE).
+5. **Iniciar o Servidor Nest.js**
+
+   - Inicie o servidor Nest.js:
+
+     ```sh
+     npm run start:dev
+
+## Passos para iniciar o servidor Nest.js com PostgreSQL em Docker
+
+1. **Clone o repositório**
+
+	```sh
+	git clone git@github.com:an-gabriel/ecommerce-server.git
+	cd ecommerce-server
+	```
+
+2. **Configurar o Docker e o PostgreSQL**
+
+	- Certifique-se de que o Docker e o Docker Compose estão instalados.
+	- Edite o arquivo `docker-compose.yml` na raiz do projeto com as credentials do banco:
+
+
+		```yaml
+		version: '3'
+
+		services:
+		postgres:
+			image: postgres:latest
+			environment:
+			POSTGRES_USER: <postgres>
+			POSTGRES_PASSWORD: <postgres>
+			POSTGRES_DB: <seu-database>
+			ports:
+			- "5432:5432"
+			volumes:
+			- postgres_data:/var/lib/postgresql/data
+
+		volumes:
+		postgres_data:
+		```
+
+    - Inicie os serviços do Docker:
+
+		```sh
+			docker-compose up -d
+		```
+
+4. **Swagger**
+
+	Acesse o swagger : http://localhost:3000/api
+	Acesse o swagger : http://localhost:3000/api-json
+
+
+
+## IMPORTANTE
+
+	- Informar essa chave no cabeçalho da requisição : b44dc311-7a9e-408b-8d7b-96667a17e291 no lugar do JWT
+	ps. obtei uma autenticaçao mais simples, entretanto poderia ter colocado ssl, JWT de fato e/ou até algo que simule o cognito.
+
+Agora você pode acessar o servidor Nest.js em http://localhost:3000 e interagir com a API. Certifique-se de atualizar as configurações de conexão com o banco de dados PostgreSQL conforme necessário.

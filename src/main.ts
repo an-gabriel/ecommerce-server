@@ -3,6 +3,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AuthMiddleware } from './middleware/auth.middleware';
+import * as express from 'express';
+import * as path from 'path';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -33,6 +35,8 @@ async function bootstrap() {
 
 	// Configuração do Swagger
 	SwaggerModule.setup('api', app, document);
+
+	app.use('/api-json', express.static(path.join(__dirname, 'swagger.json')));
 
 	await app.listen(3000);
 }
