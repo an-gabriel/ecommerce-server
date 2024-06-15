@@ -5,12 +5,20 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import * as express from 'express';
 import * as path from 'path';
+import * as cors from 'cors';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 
 	// Middleware de autenticação global
 	app.use(new AuthMiddleware().use);
+
+	app.use(cors({
+		origin: '*',
+		methods: ['GET', 'POST', 'PUT', 'DELETE'],
+		allowedHeaders: ['Content-Type', 'Authorization'],
+		preflightContinue: false,
+	}));
 
 	// Configuração do Swagger
 	const config = new DocumentBuilder()
