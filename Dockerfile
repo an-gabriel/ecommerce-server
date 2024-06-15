@@ -4,6 +4,9 @@ FROM node:18
 # Define o diretório de trabalho dentro do contêiner
 WORKDIR /app
 
+# Instale o @nestjs/cli globalmente
+RUN npm install -g @nestjs/cli
+
 # Copie os arquivos de dependência do package.json e yarn.lock para dentro do contêiner
 COPY package*.json ./
 

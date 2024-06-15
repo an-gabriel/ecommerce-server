@@ -8,13 +8,12 @@ import { EnderecoModule } from './modules/endereco/endereco.module';
 import { PedidoModule } from './modules/pedido/pedido.module';
 import { ProdutoModule } from './modules/produto/produto.module';
 import { PedidoProdutoModule } from './modules/produto-pedido/pedido-produto.module';
-import { AuthMiddleware } from './middleware/auth.middleware';
 
 @Module({
 	imports: [
 		TypeOrmModule.forRoot({
 			type: 'postgres',
-			host: 'server-postgres-1',
+			host: 'ecommerce-postgres',
 			port: 5432,
 			username: 'postgres',
 			password: 'postgres',
