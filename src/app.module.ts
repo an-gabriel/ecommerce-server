@@ -13,7 +13,7 @@ import { PedidoProdutoModule } from './modules/produto-pedido/pedido-produto.mod
 	imports: [
 		TypeOrmModule.forRoot({
 			type: 'postgres',
-			host: 'ecommerce-postgres',
+			host: 'localhost',
 			port: 5432,
 			username: 'postgres',
 			password: 'postgres',
