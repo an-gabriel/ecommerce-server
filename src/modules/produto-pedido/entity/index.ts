@@ -7,8 +7,14 @@ export class ProdutoPedido {
 	@PrimaryGeneratedColumn()
 	produto_pedido_id: number;
 
-	@Column()
+	@Column({ type: 'numeric', nullable: true })
 	qtd_produto_pedido: number;
+
+	@Column({ type: 'numeric', nullable: true })
+	produto_id: number;
+
+	@Column({ type: 'numeric', nullable: true })
+	pedido_id: number;
 
 	@Column({ type: 'numeric', nullable: true })
 	preco_produto_pedido: number;

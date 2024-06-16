@@ -20,7 +20,7 @@ export class ProdutoQueryController {
 	@ApiOperation({ summary: 'Recupera um produto pelo ID' })
 	@ApiOkResponse({ description: 'Produto recuperado com sucesso', type: Produto })
 	@ApiBearerAuth('JWT-auth')
-	async findOne(@Param('produto_id') produto_id: number) {
+	async findOne(@Param('produto_id') produto_id: number) {	
 		return this.produtoQueryService.findOne(produto_id);
 	}
 }

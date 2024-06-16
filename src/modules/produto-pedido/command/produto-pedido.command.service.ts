@@ -16,20 +16,31 @@ export class ProdutoPedidoCommandService {
 		@InjectRepository(Pedido)
 		private readonly pedidoRepository: Repository<Pedido>,
 	) { }
-
 	async create(createProdutoPedidoDto: CreateProdutoPedidoDto): Promise<ProdutoPedido> {
-		const produto = await this.produtoRepository.findOne({ where: { produto_id: createProdutoPedidoDto.produto_id } });
+		const { produto_id, pedido_id } = createProdutoPedidoDto;
+
+		const produto = await this.produtoRepository.findOne({ where: { produto_id } });
 		if (!produto) {
-			throw new NotFoundException(`Produto com ID ${createProdutoPedidoDto.produto_id} não encontrado`);
+			throw new NotFoundException(`Produto com ID ${produto_id} não encontrado`);
 		}
 
-
-		const pedido = await this.pedidoRepository.findOne({ where: { pedido_id: createProdutoPedidoDto.pedido_id } });
+		const pedido = await this.pedidoRepository.findOne({ where: { pedido_id } });
 		if (!pedido) {
-			throw new NotFoundException(`Pedido com ID ${createProdutoPedidoDto.pedido_id} não encontrado`);
+			throw new NotFoundException(`Pedido com ID ${pedido_id} não encontrado`);
 		}
 
-		const produtoPedido = this.produtoPedidoRepository.create(createProdutoPedidoDto);
+		const pedidoProdutoRepetido = await this.produtoPedidoRepository.find({ where: { pedido_id, produto_id } })
+
+		if (!!pedidoProdutoRepetido.length) {
+			throw new NotFoundException(`Já existem pedidos com esse produto`);
+		}
+
+		const produtoPedido = new ProdutoPedido();
+		produtoPedido.produto_id = produto_id;
+		produtoPedido.pedido_id = pedido_id;
+		produtoPedido.qtd_produto_pedido = createProdutoPedidoDto.qtd_produto_pedido;
+		produtoPedido.preco_produto_pedido = createProdutoPedidoDto.preco_produto_pedido;
+
 		return this.produtoPedidoRepository.save(produtoPedido);
 	}
 
