@@ -35,7 +35,7 @@ export class Cliente {
 
 	@Column({ type: 'date', nullable: true })
 	@ApiProperty({ example: '1990-01-01', description: 'Data de nascimento do cliente', nullable: true })
-	data_nascimento: string;
+	data_nascimento: Date;
 
 	@Column({ type: 'number', nullable: false })
 	@ApiProperty({ example: 1, description: 'ID do endereço do cliente', required: false })

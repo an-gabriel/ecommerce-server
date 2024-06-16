@@ -35,9 +35,10 @@ export class ClienteCommandService {
 			throw new BadRequestException('Este endereço não existe');
 		}
 
-		console.log(createClienteDto)
-
-		const cliente = this.clienteRepository.create(createClienteDto);
+		const cliente = this.clienteRepository.create({
+			...createClienteDto,
+			data_nascimento: createClienteDto.data_nascimento ? new Date(createClienteDto.data_nascimento) : undefined,
+		});
 		return this.clienteRepository.save(cliente);
 	}
 
