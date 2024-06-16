@@ -3,10 +3,10 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import * as express from 'express';
-
 import * as path from 'path';
 import { ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
+
 dotenv.config();
 
 async function bootstrap() {
@@ -14,15 +14,7 @@ async function bootstrap() {
 		bodyParser: true,
 	});
 
-	// Middleware de CORS customizado
-	app.use((req, res, next) => {
-		res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001/');
-		res.header(
-			'Access-Control-Allow-Headers',
-			'Origin, X-Requested-With, Content-Type, Accept',
-		);
-		next();
-	});
+	app.enableCors({ origin: true })
 
 	// Middleware de autenticação global
 	app.use(new AuthMiddleware().use);
@@ -50,8 +42,6 @@ async function bootstrap() {
 
 	// Configuração do Swagger
 	SwaggerModule.setup('api', app, document);
-
-	app.use('/api-json', express.static(path.join(__dirname, 'swagger.json')));
 
 	// Aplicação do ValidationPipe globalmente
 	app.useGlobalPipes(new ValidationPipe());
