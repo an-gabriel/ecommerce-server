@@ -29,8 +29,8 @@ export class EnderecoCommandService {
 			throw new NotFoundException(`Endereço com ID ${endereco_id} não encontrado`);
 		}
 
-		if (await this.enderecoJaCadastrado(updateEnderecoDto.cep, updateEnderecoDto.numero)) {
-			throw new BadRequestException('Este CEP já está cadastrado para outro endereço.');
+		if (updateEnderecoDto.cep) {
+			throw new BadRequestException('Não é permitido a atualização de CEP');
 		}
 
 		await this.validarDto(updateEnderecoDto);
