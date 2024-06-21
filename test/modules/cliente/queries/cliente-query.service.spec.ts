@@ -48,7 +48,7 @@ describe('ClienteQueryService', () => {
 				pedidos: [],
 				username: 'cliente123',
 				telefone: '11999999999',
-				data_nascimento: '1990-01-01',
+				data_nascimento: new Date('1990-01-01'),
 				endereco_id: 0
 			}];
 
@@ -81,7 +81,7 @@ describe('ClienteQueryService', () => {
 				pedidos: [],
 				username: 'cliente123',
 				telefone: '11999999999',
-				data_nascimento: '1990-01-01',
+				data_nascimento: new Date('1990-01-01'),
 				endereco_id: 0
 			};
 			jest.spyOn(clienteRepository, 'findOne').mockResolvedValue(cliente);

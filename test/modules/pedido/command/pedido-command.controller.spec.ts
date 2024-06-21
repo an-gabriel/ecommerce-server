@@ -47,7 +47,7 @@ describe('PedidoCommandController', () => {
 					nome: 'Cliente Atualizado',
 					cpf: '12345678901',
 					telefone: '11999999999',
-					data_nascimento: '1990-01-01',
+					data_nascimento: new Date('1990-01-01'),
 					pedidos: [],
 					endereco_id: 0
 				},

@@ -76,7 +76,9 @@ describe('ProdutoPedidoCommandController', () => {
 				produto_pedido_id: 1,
 				qtd_produto_pedido: 3,
 				preco_produto_pedido: 150.00,
+				produto_id: 1,
 				produto: new Produto(),
+				pedido_id: 1,
 				pedido: new Pedido(),
 			};
 

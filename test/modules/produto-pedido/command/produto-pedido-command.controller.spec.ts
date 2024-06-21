@@ -71,7 +71,9 @@ describe('ProdutoPedidoCommandController', () => {
 			const updatedProdutoPedido: ProdutoPedido = {
 				produto_pedido_id: 1,
 				...updateDto,
+				produto_id: 1,
 				produto: new Produto(),
+				pedido_id: 1,
 				pedido: new Pedido(),
 			};
 

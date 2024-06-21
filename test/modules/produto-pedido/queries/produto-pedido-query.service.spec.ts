@@ -38,6 +38,8 @@ describe('ProdutoPedidoQueryService', () => {
 				preco_produto_pedido: 100.00,
 				produto: new Produto(),
 				pedido: new Pedido(),
+				produto_id: 1,
+				pedido_id: 1
 			};
 
 			jest.spyOn(repository, 'findOne').mockResolvedValue(mockProdutoPedido);
@@ -58,6 +60,8 @@ describe('ProdutoPedidoQueryService', () => {
 					preco_produto_pedido: 100.00,
 					produto: new Produto(),
 					pedido: new Pedido(),
+					produto_id: 1,
+					pedido_id: 2
 				},
 				{
 					produto_pedido_id: 2,
@@ -65,6 +69,8 @@ describe('ProdutoPedidoQueryService', () => {
 					preco_produto_pedido: 150.00,
 					produto: new Produto(),
 					pedido: new Pedido(),
+					produto_id: 1,
+					pedido_id: 2
 				},
 			];
 

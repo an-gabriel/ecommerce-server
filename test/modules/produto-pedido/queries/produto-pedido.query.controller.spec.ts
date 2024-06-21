@@ -35,14 +35,18 @@ describe('ProdutoPedidoQueryController', () => {
 					produto_pedido_id: 1,
 					qtd_produto_pedido: 2,
 					preco_produto_pedido: 100.00,
+					produto_id: 1,
 					produto: new Produto(),
+					pedido_id: 1,
 					pedido: new Pedido(),
 				},
 				{
 					produto_pedido_id: 2,
 					qtd_produto_pedido: 3,
 					preco_produto_pedido: 150.00,
+					produto_id: 2,
 					produto: new Produto(),
+					pedido_id: 2,
 					pedido: new Pedido(),
 				},
 			];
@@ -60,7 +64,9 @@ describe('ProdutoPedidoQueryController', () => {
 				produto_pedido_id: produtoPedidoId,
 				qtd_produto_pedido: 2,
 				preco_produto_pedido: 100.00,
+				pedido_id: 1,
 				produto: new Produto(),
+				produto_id: 2,
 				pedido: new Pedido(),
 			};
 

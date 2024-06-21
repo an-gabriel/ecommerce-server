@@ -5,6 +5,9 @@ import { CreateCategoriaDto, UpdateCategoriaDto } from '../../../../src/modules/
 import { Repository } from 'typeorm';
 import { DatabaseService } from '../../../database/database.service';
 import { Categoria } from '../../../../src/modules/categoria/entity';
+import { NotFoundException } from '@nestjs/common';
+import { QueryFailedError } from 'typeorm';
+import { ForeignKeyConstraintViolationException } from '../../../../src/utils/HttpExceptionCustom';
 
 describe('CategoriaCommandService', () => {
 	let service: CategoriaCommandService;
@@ -94,20 +97,50 @@ describe('CategoriaCommandService', () => {
 		expect(categoriaRepositoryMock.update).toHaveBeenCalledWith(categoria.categoria_id, updatedCategoriaDto);
 	});
 
-
 	it('should delete a categoria', async () => {
+		const categoriaId = 1;
 		const categoria: Categoria = {
-			categoria_id: 1,
+			categoria_id: categoriaId,
 			nome_categoria: 'Eletrônicos',
 			descricao_categoria: 'Dispositivos eletrônicos',
 			produtos: []
 		};
 
+		categoriaRepositoryMock.findOne.mockResolvedValue(categoria);
 		categoriaRepositoryMock.delete.mockResolvedValue({ affected: 1 });
 
-		await service.delete(categoria.categoria_id);
+		await service.delete(categoriaId);
 
-		expect(categoriaRepositoryMock.delete).toHaveBeenCalledWith(categoria.categoria_id);
+		expect(categoriaRepositoryMock.findOne).toHaveBeenCalledWith({ where: { categoria_id: categoriaId } });
+		expect(categoriaRepositoryMock.delete).toHaveBeenCalledWith(categoriaId);
 	});
 
+	it('should throw NotFoundException if categoria does not exist', async () => {
+		const categoriaId = 1;
+
+		categoriaRepositoryMock.findOne.mockResolvedValue(null);
+
+		await expect(service.delete(categoriaId)).rejects.toThrow(NotFoundException);
+
+		expect(categoriaRepositoryMock.findOne).toHaveBeenCalledWith({ where: { categoria_id: categoriaId } });
+		expect(categoriaRepositoryMock.delete).not.toHaveBeenCalled();
+	});
+
+	it('should throw ForeignKeyConstraintViolationException if categoria is used by products', async () => {
+		const categoriaId = 1;
+		const categoria: Categoria = {
+			categoria_id: categoriaId,
+			nome_categoria: 'Eletrônicos',
+			descricao_categoria: 'Dispositivos eletrônicos',
+			produtos: []
+		};
+
+		categoriaRepositoryMock.findOne.mockResolvedValue(categoria);
+		categoriaRepositoryMock.delete.mockRejectedValue(new QueryFailedError('query', [], new Error('violates foreign key constraint')));
+
+		await expect(service.delete(categoriaId)).rejects.toThrow(ForeignKeyConstraintViolationException);
+
+		expect(categoriaRepositoryMock.findOne).toHaveBeenCalledWith({ where: { categoria_id: categoriaId } });
+		expect(categoriaRepositoryMock.delete).toHaveBeenCalledWith(categoriaId);
+	});
 });
